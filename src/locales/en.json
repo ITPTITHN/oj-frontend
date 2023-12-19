@@ -1,0 +1,13 @@
+{
+  "common": {
+    "login": "Login"
+  },
+  "error": {
+    "unauthorized": "Unauthorized %{message}",
+    "notFound": "Not Found",
+    "forbidden": "Forbidden",
+    "internalServerError": "Internal Server Error",
+    "serviceUnavailable": "Service Unavailable",
+    "unknown": "Something went wrong"
+  }
+}

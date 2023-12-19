@@ -1,0 +1,13 @@
+{
+  "common": {
+    "login": "Đăng nhập"
+  },
+  "error": {
+    "unauthorized": "Không được truy cập %{message}",
+    "notFound": "Không tìm thấy",
+    "forbidden": "Truy cập bị từ chối",
+    "internalServerError": "Lỗi máy chủ",
+    "serviceUnavailable": "Dịch vụ không khả dụng",
+    "unknown": "Lỗi không xác định"
+  }
+}
