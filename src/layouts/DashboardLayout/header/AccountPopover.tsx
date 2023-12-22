@@ -1,4 +1,3 @@
-import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import NextLink from 'next/link';
 import { alpha } from '@mui/material/styles';
@@ -8,6 +7,7 @@ import useIsMountedRef from '@/hooks/useIsMountedRef';
 import MyAvatar from '@/components/MyAvatar';
 import MenuPopover from '@/components/MenuPopover';
 import { IconButtonAnimate } from '@/components/animate';
+import toast from "@/utils/toast";
 
 // ----------------------------------------------------------------------
 
@@ -23,8 +23,6 @@ export default function AccountPopover() {
   const { user, logOut } = useAuth();
 
   const isMountedRef = useIsMountedRef();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
 
@@ -44,7 +42,7 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+      toast.error(error);
     }
   };
 
