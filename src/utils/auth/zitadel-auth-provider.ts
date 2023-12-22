@@ -1,16 +1,17 @@
 import ZitadelProvider, { ZitadelProfile } from "next-auth/providers/zitadel";
-import { AuthProvider } from "@/utils/auth/auth-provider";
 import { signIn } from "next-auth/react";
+import { Issuer } from "openid-client";
+import { AuthProvider } from "@/utils/auth/auth-provider";
+
 
 const PROVIDER_ID = "zitadel";
-let wellKnown: any = {};
+let issuer: Issuer<any>;
 
-const getWellKnown = async () => {
-  if (!wellKnown) {
-    const response = await fetch(`${process.env.ZITADEL_ISSUER}/.well-known/openid-configuration`);
-    wellKnown = await response.json();
+const getIssuer = async () => {
+  if (!issuer) {
+    issuer = await Issuer.discover(process.env.ZITADEL_ISSUER ?? "");
   }
-  return wellKnown;
+  return issuer;
 };
 
 const serializeProfile = (profile: ZitadelProfile & any) => ({
@@ -27,7 +28,7 @@ const serializeProfile = (profile: ZitadelProfile & any) => ({
 
 const provider = ZitadelProvider({
   id: "zitadel",
-  issuer: process.env.ZITADEL_ISSUER,
+  issuer: process.env.ZITADEL_ISSUER ?? "",
   clientId: process.env.ZITADEL_CLIENT_ID ?? "",
   clientSecret: process.env.ZITADEL_CLIENT_SECRET ?? "",
   authorization: {
@@ -42,7 +43,7 @@ const provider = ZitadelProvider({
 const refreshToken = async (tokenSet: any) => {
   if (!tokenSet) return null;
   const { refreshToken } = tokenSet;
-  const wellKnown = await getWellKnown();
+  const issuer = await getIssuer();
 
   const urlSearchParams = new URLSearchParams({
     client_id: process.env.ZITADEL_CLIENT_ID ?? "",
@@ -50,7 +51,8 @@ const refreshToken = async (tokenSet: any) => {
     grant_type: "refresh_token",
     refresh_token: refreshToken,
   });
-  const response = await fetch(`${wellKnown.token_endpoint}?${urlSearchParams}`, {
+
+  const response = await fetch(`${issuer.token_endpoint}?${urlSearchParams}`, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
@@ -60,7 +62,7 @@ const refreshToken = async (tokenSet: any) => {
   if (!response.ok) {
     await signIn(PROVIDER_ID);
     return null;
-  };
+  }
 
   return {
     accessToken: data.access_token,

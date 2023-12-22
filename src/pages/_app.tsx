@@ -12,7 +12,7 @@ import "@fullcalendar/common/main.min.css";
 import "@fullcalendar/daygrid/main.min.css";
 
 import Head from "next/head";
-import App, { AppContext, AppInitialProps } from "next/app";
+import { AppInitialProps } from "next/app";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { store, persistor } from "@/redux/store";
@@ -75,13 +75,3 @@ export default function AppMain(props: MyAppProps) {
     </>
   );
 }
-
-// ----------------------------------------------------------------------
-
-AppMain.getInitialProps = async (context: AppContext) => {
-  const appProps = await App.getInitialProps(context);
-
-  return {
-    ...appProps,
-  };
-};
